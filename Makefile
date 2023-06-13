@@ -105,6 +105,11 @@ $(BINDIR)/test-perf: $(TESTDIR)/perf.c $(BINDIR)/$(SO_VERSIONED)
 	(cd $(BINDIR) && \
 	    $(CC) perf.o -L$(BINDIR) $(RPATH) -lbloom -o test-perf)
 
+$(BINDIR)/test-merge-perf: $(TESTDIR)/merge-perf.c $(BINDIR)/$(SO_VERSIONED)
+	$(CC) $(CFLAGS) $(OPT) $(INC) -c $(TESTDIR)/merge-perf.c -o $(BINDIR)/merge-perf.o
+	(cd $(BINDIR) && \
+	    $(CC) merge-perf.o -L$(BINDIR) $(RPATH) -lbloom -o test-merge-perf)
+
 $(BINDIR)/test-basic: $(TESTDIR)/basic.c $(BINDIR)/libbloom.a
 	$(CC) $(CFLAGS) $(OPT) $(INC) $(TESTDIR)/basic.c \
 	    $(BINDIR)/libbloom.a $(LIB) -o $(BINDIR)/test-basic
@@ -131,6 +136,11 @@ test: $(BINDIR)/test-libbloom $(BINDIR)/test-basic
 
 perf: $(BINDIR)/test-perf
 	$(BINDIR)/test-perf
+
+merge-perf: $(BINDIR)/test-merge-perf
+	$(BINDIR)/test-merge-perf
+
+luajit: $(BINDIR)
 
 #
 # Builds the visualize program into $BINDIR

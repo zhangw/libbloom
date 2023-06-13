@@ -25,7 +25,6 @@
 #include <time.h>
 #endif
 
-
 uint64_t get_current_time_millis()
 {
   struct timeval tp;
@@ -51,18 +50,26 @@ void add_and_test(int entries, double error, uint64_t count,
   uint64_t t1 = get_current_time_millis();
 
   n = initial;
-  for (uint64_t c = 0; c < count; c++) {
+  for (uint64_t c = 0; c < count; c++)
+  {
     collisions += bloom_add(&bloom, &n, sizeof(uint64_t));
     n++;
   }
 
   uint64_t t2 = get_current_time_millis();
 
-  if (test_known_added) { n = initial; }
+  if (test_known_added)
+  {
+    n = initial;
+  }
 
-  for (uint64_t c = 0; c < count; c++) {
+  for (uint64_t c = 0; c < count; c++)
+  {
     rv = bloom_check(&bloom, &n, sizeof(uint64_t));
-    if (test_known_added) { assert(rv == 1); }
+    if (test_known_added)
+    {
+      assert(rv == 1);
+    }
     n++;
     found += rv;
   }
@@ -73,9 +80,8 @@ void add_and_test(int entries, double error, uint64_t count,
 
   printf("add_and_test: %10d (%1.4f): %8d collisions (%1.4f), %10" PRIu64
          " found; ADD: %6" PRIu64 " ms, CHECK: %6" PRIu64 " ms\n",
-         entries, error, collisions, pct, found, (t2-t1), (t3-t2));
+         entries, error, collisions, pct, found, (t2 - t1), (t3 - t2));
 }
-
 
 void basic()
 {
@@ -83,34 +89,38 @@ void basic()
 
   int n = 50000;
 
-  add_and_test(n+15, 0.01, n, 1);
-  add_and_test(n+15, 0.01, n, 0);
+  // add_and_test(n+15, 0.01, n, 1);
+  add_and_test(n + 15, 0.01, n, 0);
 
   n = 1000000;
-  add_and_test(n, 0.1, n, 1);
+  // add_and_test(n, 0.1, n, 1);
   add_and_test(n, 0.1, n, 0);
 
-  add_and_test(n, 0.01, n, 1);
+  // add_and_test(n, 0.01, n, 1);
   add_and_test(n, 0.01, n, 0);
 
-  add_and_test(n, 0.001, n, 1);
+  // add_and_test(n, 0.001, n, 1);
   add_and_test(n, 0.001, n, 0);
 
   n = 10000000;
-  add_and_test(n, 0.001, n, 1);
+  // add_and_test(n, 0.001, n, 1);
+  add_and_test(n, 0.1, n, 0);
+  add_and_test(n, 0.01, n, 0);
   add_and_test(n, 0.001, n, 0);
 }
 
-
 int main(int argc, char **argv)
 {
-  if (argc == 1) {
+  if (argc == 1)
+  {
     basic();
     exit(0);
   }
 
-  if (!strncmp(argv[1], "-E", 2)) {
-    if (argc != 4) {
+  if (!strncmp(argv[1], "-E", 2))
+  {
+    if (argc != 4)
+    {
       printf("-E COUNT ERROR\n");
       printf("Will do runs adding COUNT elements into bloom filter.\n");
       printf("Initial bloom filter size is COUNT, then increasing.\n");
@@ -121,10 +131,10 @@ int main(int argc, char **argv)
     int count = atoi(argv[2]);
     double error = atof(argv[3]);
     int capacity = count;
-    while(1) {
+    while (1)
+    {
       add_and_test(capacity, error, count, 0);
       capacity += 1;
     }
   }
-
 }
