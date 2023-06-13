@@ -77,7 +77,8 @@ SO_VERSIONED=libbloom.$(BLOOM_VERSION).$(SO)
 LD_SONAME=
 endif
 
-
+LUAJIT_BIN=/usr/local/openresty/luajit/bin/luajit
+LUAJIT_BIN_DEBUG=/opt/local/luajit2-2.1-20230410-debug/bin/luajit
 
 all: $(BINDIR)/$(SO_VERSIONED) $(BINDIR)/libbloom.a
 
@@ -140,9 +141,16 @@ perf: $(BINDIR)/test-perf
 merge-perf: $(BINDIR)/test-merge-perf
 	$(BINDIR)/test-merge-perf
 
-luajit: $(BINDIR)
+luajit: $(BINDIR)/$(SO_VERSIONED)
+	(cd $(TESTDIR)/luajit-ng && \
+		LD_LIBRARY_PATH=$(BINDIR) $(LUAJIT_BIN) basic.lua && \
+		LD_LIBRARY_PATH=$(BINDIR) $(LUAJIT_BIN) perf.lua)
 
-#
+print-luajit-gdb-cli:
+	@echo "$(MAKE) clean"
+	@echo "DEBUG=1 $(MAKE)"
+	@echo "cd $(TESTDIR)/luajit-ng && LD_LIBRARY_PATH=$(BINDIR) gdb --args ${LUAJIT_BIN_DEBUG} perf.lua"
+
 # Builds the visualize program into $BINDIR
 # This is not built by default as it requires the GD library
 # (on Debian: libgd3 and libgd-dev) to be present.
