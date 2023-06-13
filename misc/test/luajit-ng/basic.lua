@@ -22,5 +22,3 @@ end
 local bloom_foo = bloom.new(1000, 0.1)
 local key1 = "hello bloom!"
 verbose_add_and_check(bloom_foo, key1)
--- local key2 = nil
--- verbose_add_and_check(key2)

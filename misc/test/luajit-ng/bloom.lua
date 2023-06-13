@@ -65,19 +65,24 @@ end
 local check_key = function (s)
     if type(s) ~= 'string' then
         if not s then
-            return ''
+            error("invalid key", 2)
         else
-            return tostring(s)
+            s = tostring(s)
         end
     end
-    return s
+    local sl = #s
+    if sl > 0 then
+        return s, sl
+    else
+        error("invalid key", 2)
+    end
 end
 
 _M.add = function (self, key)
     check_instance(self)
     local obj = self.bloom_obj
-    local key_str = check_key(key)
-    local ret = bloom_add(obj, key_str, #key_str)
+    local key_str, key_len = check_key(key)
+    local ret = bloom_add(obj, key_str, key_len)
     if ret ~= -1 then
         return true
     else
@@ -88,8 +93,8 @@ end
 _M.check = function (self, key)
     check_instance(self)
     local obj = self.bloom_obj
-    local key_str = check_key(key)
-    local ret = bloom_check(obj, key_str, #key_str)
+    local key_str, key_len = check_key(key)
+    local ret = bloom_check(obj, key_str, key_len)
     if ret == 0 then
         return false
     end
