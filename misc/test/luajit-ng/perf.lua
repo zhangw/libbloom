@@ -1,6 +1,6 @@
 -- trying to issue Segmentation fault
 -- TODO: it seems the gc will cause carsh
-collectgarbage("stop")
+-- collectgarbage("stop")
 -- jit.off()
 local util = require "util"
 local bloom = require "bloom"
@@ -28,14 +28,18 @@ local check_set_benchmark = function (entries, e)
     print("check cost ms: " .. (ended - begin))
 end
 
-check_set_benchmark(100000, 0.01)
-check_set_benchmark(100000, 0.001)
+for i = 1, 10, 1 do
+    check_set_benchmark(100000, 0.01)
+    check_set_benchmark(100000, 0.001)
 
-check_set_benchmark(1000000, 0.01)
-check_set_benchmark(1000000, 0.001)
+    check_set_benchmark(1000000, 0.01)
+    check_set_benchmark(1000000, 0.001)
 
-check_set_benchmark(10000000, 0.01)
-check_set_benchmark(10000000, 0.001)
+    check_set_benchmark(10000000, 0.01)
+    check_set_benchmark(10000000, 0.001)
 
-check_set_benchmark(100000000, 0.01)
-check_set_benchmark(100000000, 0.001)
+    check_set_benchmark(100000000, 0.01)
+    check_set_benchmark(100000000, 0.001)
+    -- trying to verify if the bloom gc crashed would be fixed
+    collectgarbage("collect")
+end

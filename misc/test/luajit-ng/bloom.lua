@@ -34,7 +34,9 @@ ffi.cdef[[
     const char * bloom_version();
 ]]
 bloom_init = bl.bloom_init2
-bloom_free = bl.bloom_free
+bloom_free = function (bloom_obj)
+    bl.bloom_free(bloom_obj)
+end
 bloom_add = bl.bloom_add
 bloom_check = bl.bloom_check
 bloom_version = bl.bloom_version
